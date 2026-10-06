@@ -1,0 +1,21 @@
+{
+  "beschreibung": "Beispiel: SYN-Scan auf Port 22 und 80, danach HTTP-Abruf; 100 Pakete/s",
+  "reichweite": ["paketgroesse", "zwischenankunftszeit", "protokolle", "zielports",
+                 "durchsatz_pakete_pro_s"],
+  "verteilungen": {
+    "paketgroesse": {"typ": "empirisch", "werte": [40, 60, 1500], "gewichte": [0.7, 0.2, 0.1]},
+    "zwischenankunftszeit": {"typ": "exponentiell", "mittelwert": 0.01},
+    "protokolle": {"typ": "kategorial", "anteile": {"TCP": 1.0}},
+    "zielports": {"typ": "kategorial", "anteile": {"22/tcp": 0.2, "80/tcp": 0.8}}
+  },
+  "skalare": {
+    "durchsatz_pakete_pro_s": 100
+  },
+  "ablauf": [
+    {"name": "Scan Port 22", "filter": {"proto": "TCP", "dst_port": 22, "tcp_flags": "S"}},
+    {"name": "Scan Port 80", "filter": {"proto": "TCP", "dst_port": 80, "tcp_flags": "S"}},
+    {"name": "HTTP-Abruf", "filter": {"proto": "TCP", "dst_port": 80, "tcp_flags": "PA"},
+     "min_pakete": 1},
+    {"name": "Exfiltration (DNS)", "filter": {"proto": "UDP", "dst_port": 53}}
+  ]
+}

@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+pcap_check_*.yaml
+pcap_check_*.json
